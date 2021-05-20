@@ -1,6 +1,6 @@
 Exame: NOME_DO_EXAME
 
-CT: CARAMBA - Ribeirão Preto - RR
+CT: NOXUS - Ribeirão Preto - RR
 Data: 03/03/2021 - Hora: 13:00 - Vagas: 2
 Data: 04/03/2021 - Hora: 13:00 - Vagas: 4
 Data: 05/03/2021 - Hora: 13:00 - Vagas: 1
@@ -46,7 +46,7 @@ Data: 08/04/2021 - Hora: 13:00 - Vagas: 4
 Data: 09/04/2021 - Hora: 09:00 - Vagas: 4
 Data: 09/04/2021 - Hora: 13:00 - Vagas: 4
 
-CT: lindo - Ribeirão Preto - SP
+CT: DEMACIA - Ribeirão Preto - SP
 Data: 01/03/2021 - Hora: 13:00 - Vagas: 5
 Data: 03/03/2021 - Hora: 09:00 - Vagas: 4
 Data: 04/03/2021 - Hora: 09:00 - Vagas: 5
@@ -65,7 +65,7 @@ Data: 05/04/2021 - Hora: 13:00 - Vagas: 5
 Data: 07/04/2021 - Hora: 09:00 - Vagas: 5
 Data: 08/04/2021 - Hora: 09:00 - Vagas: 5
 
-CT: EU TE AMO - Pouso Alegre - MG
+CT: IONIA - Pouso Alegre - MG
 Data: 03/03/2021 - Hora: 14:00 - Vagas: 1
 Data: 08/03/2021 - Hora: 15:00 - Vagas: 1
 Data: 10/03/2021 - Hora: 14:00 - Vagas: 2
