@@ -1,5 +1,5 @@
 def abrir_arquivo():
-	arquivo = open('dados/03-03---04--09.txt', encoding='utf-8')
+	arquivo = open('dados/05-23---07-23.txt', encoding='utf-8')
 	return arquivo
 
 
@@ -43,7 +43,7 @@ def formata_dados(arquivo):
 			elif len(arquivo[i]) == 44:
 				ct.append(
 				    (arquivo[i][6:16], arquivo[i][25:30], arquivo[i][-4:-1]))
-
+           
 	dia_hora_vagas.append(ct)
 
 	return nomes_cts, dia_hora_vagas[1:]
@@ -56,7 +56,7 @@ def verificaBarraN(texto):
 		return True
 
 
-def vagasPorMes(mes, dados):
+def vagasTotaisPorMes(mes, dados):
 	vagas = 0
 
 	for i in dados:
@@ -67,19 +67,59 @@ def vagasPorMes(mes, dados):
 	return vagas
 
 
-#abertura, armazenamento e fechamento de arquivo
+def vagasPorUF(nome_cts, dados):
+    UFs = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
+
+    mes = int(input("Digite o mês desejado: "))
+
+    total = 0
+
+    for i in range(len(UFs)):
+        vagas = 0
+        for j in range(len(nome_cts)):
+            if nome_cts[j][-2:] == UFs[i]:
+                for k in range(len(dados[j])):
+                    if int(dados[j][k][0][3:5]) == mes: #Soma apenas o mes solicitado
+                        vagas += int(dados[j][k][2])
+        print("{}: {}".format(UFs[i],vagas))
+        total += vagas
+
+    print("\nTotal:",total)
+    return 
+
+
+def vagasPorCT(nome_cts, dados):
+    ct = str(input("Digite o nome do CT exatamente igual ao CertPessoas: "))
+    
+
+    for i in range(len(nome_cts)):
+        vagas = 0
+        if ct in nome_cts[i]:
+            print("CT: ", nome_cts[i])
+            for j in range(len(dados[i])):
+                vagas += int(dados[i][j][2])
+            print(vagas)
+    
+    return
+
+
+''' abertura, armazenamento e fechamento de arquivo'''
 arquivo = abrir_arquivo()
 dados = extrai_dados(arquivo)
 fechar_arquivo(arquivo)
 
-#aqui extraio o tipo de exame
+''' aqui extraio o tipo de exame'''
 tipo_de_exame = (dados.pop(0))[7:]
 
-#removi as ocorrencias isoladas de \n
+''' removi as ocorrencias isoladas de \n'''
 dados = list(filter(verificaBarraN, dados))
 
-#nome_cts = lista de strings
-#dia_hora_vagas = lista de listas de triplas
+''' nome_cts = lista de strings
+    dia_hora_vagas = lista de listas de triplas '''
 nome_cts, dia_hora_vagas = formata_dados(dados)
 
-print(vagasPorMes('04', dia_hora_vagas))
+#print(vagasTotaisPorMes('06',dia_hora_vagas))
+print(dia_hora_vagas[0])
+vagasPorUF(nome_cts, dia_hora_vagas)
+
+#vagasPorCT(nome_cts, dia_hora_vagas)
