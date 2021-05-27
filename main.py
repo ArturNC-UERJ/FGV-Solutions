@@ -110,6 +110,7 @@ fechar_arquivo(arquivo)
 
 ''' aqui extraio o tipo de exame'''
 tipo_de_exame = (dados.pop(0))[7:]
+print(tipo_de_exame)
 
 ''' removi as ocorrencias isoladas de \n'''
 dados = list(filter(verificaBarraN, dados))
@@ -117,9 +118,3 @@ dados = list(filter(verificaBarraN, dados))
 ''' nome_cts = lista de strings
     dia_hora_vagas = lista de listas de triplas '''
 nome_cts, dia_hora_vagas = formata_dados(dados)
-
-#print(vagasTotaisPorMes('06',dia_hora_vagas))
-print(dia_hora_vagas[0])
-vagasPorUF(nome_cts, dia_hora_vagas)
-
-#vagasPorCT(nome_cts, dia_hora_vagas)
