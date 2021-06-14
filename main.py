@@ -1,23 +1,19 @@
-def abrir_arquivo():
-	arquivo = open('dados/05-23---07-23.txt', encoding='utf-8')
-	return arquivo
+import datetime as dt
 
+def extrai_dados():
+	arquivo = open('03-03---04--09.txt', encoding='utf-8')
 
-def fechar_arquivo(arquivo):
-	arquivo.close()
-	return
-
-
-def extrai_dados(arquivo):
 	#retorna lista iniciando por nome do exame e depois listas de cts
 	lista = arquivo.readlines()
-	return lista
 
+	arquivo.close()
+	return lista
 
 def formata_dados(arquivo):
 	#função recebe um arquivo em lista e retorna seus valores em variaveis
 
 	#variaveis de retorno principal
+
 	nomes_cts = []
 	dia_hora_vagas = []
 
@@ -31,23 +27,22 @@ def formata_dados(arquivo):
 			nomes_sem_barraN = arquivo[i].replace("\n", "")
 			nome_ct = nomes_sem_barraN.replace("CT: ", "")
 			nomes_cts.append(nome_ct)
-			dia_hora_vagas.append(ct)
+			if ct != []:
+				dia_hora_vagas.append(ct)
 			ct = []
 		elif arquivo[i][:4] == "Data":
 			if len(arquivo[i]) == 42:
-				ct.append(
-				    (arquivo[i][6:16], arquivo[i][25:30], arquivo[i][-2]))
+				ct.append((dt.datetime.strptime(arquivo[i][6:16] + " " + arquivo[i][25:30], '%d/%m/%Y %H:%M'), arquivo[i][-2]))
 			elif len(arquivo[i]) == 43:
-				ct.append(
-				    (arquivo[i][6:16], arquivo[i][25:30], arquivo[i][-3:-1]))
+				ct.append((dt.datetime.strptime(arquivo[i][6:16] + " " + arquivo[i][25:30], '%d/%m/%Y %H:%M'), arquivo[i][-3:-1]))
 			elif len(arquivo[i]) == 44:
-				ct.append(
-				    (arquivo[i][6:16], arquivo[i][25:30], arquivo[i][-4:-1]))
-           
+				ct.append((dt.datetime.strptime(arquivo[i][6:16] + " " + arquivo[i][25:30], '%d/%m/%Y %H:%M'), arquivo[i][-4:-1]))
+
 	dia_hora_vagas.append(ct)
 
-	return nomes_cts, dia_hora_vagas[1:]
+	dados = [nomes_cts,dia_hora_vagas]
 
+	return dados
 
 def verificaBarraN(texto):
 	if texto == "\n":
@@ -55,8 +50,8 @@ def verificaBarraN(texto):
 	else:
 		return True
 
-
-def vagasTotaisPorMes(mes, dados):
+#FUNÇÕES DE OPERAÇÃO PRINCIPAIS
+def vagasPorMes(mes, dados): #REFAZER COM DATETIME
 	vagas = 0
 
 	for i in dados:
@@ -66,55 +61,66 @@ def vagasTotaisPorMes(mes, dados):
 
 	return vagas
 
+def vagasPorEstado(dados):
+	UFs = ['AC','AL','AP','AM','BA','CE','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO','DF']
 
-def vagasPorUF(nome_cts, dados):
-    UFs = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
+	vagas = 0
 
-    mes = int(input("Digite o mês desejado: "))
+	print('Vagas por unidade federativa: ')
+	for UF in UFs:
+		for i in range(len(dados[0])):
+			if dados[0][i][-2:] == UF:
+				for j in range(len(dados[1][i])):
+					vagas += int(dados[1][i][j][1])
+		print("{} --> {}".format(UF, vagas))
+		vagas = 0
 
-    total = 0
+	return
 
-    for i in range(len(UFs)):
-        vagas = 0
-        for j in range(len(nome_cts)):
-            if nome_cts[j][-2:] == UFs[i]:
-                for k in range(len(dados[j])):
-                    if int(dados[j][k][0][3:5]) == mes: #Soma apenas o mes solicitado
-                        vagas += int(dados[j][k][2])
-        print("{}: {}".format(UFs[i],vagas))
-        total += vagas
+def vagasPorPeriodo(dados):
 
-    print("\nTotal:",total)
-    return 
+	diaI = int(input("Digite o dia inicial do intervalo: "))
+	mesI = int(input("Digite o mes inicial do intervalo: "))
+	anoI = int(input("Digite o ano inicial do intervalo: "))
 
+	diaF = int(input("Digite o dia final do intervalo: "))
+	mesF = int(input("Digite o mes final do intervalo: "))
+	anoF = int(input("Digite o ano final do intervalo: "))
 
-def vagasPorCT(nome_cts, dados):
-    ct = str(input("Digite o nome do CT exatamente igual ao CertPessoas: "))
-    
+	inicio = dt.datetime(anoI, mesI, diaI)
+	final = dt.datetime(anoF, mesF, diaF)
 
-    for i in range(len(nome_cts)):
-        vagas = 0
-        if ct in nome_cts[i]:
-            print("CT: ", nome_cts[i])
-            for j in range(len(dados[i])):
-                vagas += int(dados[i][j][2])
-            print(vagas)
-    
-    return
+	for i in range(len(dados[1])):
+		print('-'*(len(dados[0][i]) + 4))
+		print(f'| {dados[0][i]} |')
+		print('-' * (len(dados[0][i]) + 4))
+		print(f'|    DATA    | HORA  |VAGAS |')
+		totVagas = 0
+		for j in range(len(dados[1][i])):
+			if inicio <= dados[1][i][j][0] <= final:
+				totVagas += int(dados[1][i][j][1])
+				print(f'| {dados[1][i][j][0]:%d}/{dados[1][i][j][0]:%m}/{dados[1][i][j][0]:%Y} | {dados[1][i][j][0]:%H}:{dados[1][i][j][0]:%M} |  {dados[1][i][j][1]:3} |')
+		print('-' * (len('Total de vagas no período:    ') + 4))
+		print(f'| Total de vagas no período: {totVagas} |')
+		print('-' * (len('Total de vagas no período:    ') + 4))
+		print()
 
+	return
 
-''' abertura, armazenamento e fechamento de arquivo'''
-arquivo = abrir_arquivo()
-dados = extrai_dados(arquivo)
-fechar_arquivo(arquivo)
+if __name__ == '__main__':
 
-''' aqui extraio o tipo de exame'''
-tipo_de_exame = (dados.pop(0))[7:]
-print(tipo_de_exame)
+	# abertura, armazenamento e fechamento de arquivo
+	dados = extrai_dados()
 
-''' removi as ocorrencias isoladas de \n'''
-dados = list(filter(verificaBarraN, dados))
+	# aqui extraio o tipo de exame
+	tipo_de_exame = (dados.pop(0))[7:]
 
-''' nome_cts = lista de strings
-    dia_hora_vagas = lista de listas de triplas '''
-nome_cts, dia_hora_vagas = formata_dados(dados)
+	# removi as ocorrencias isoladas de \n
+	dados = list(filter(verificaBarraN, dados))
+
+	# dados[0] = lista de nomes de cts
+	# dados[1] = lista de listas de triplas | ex: [[(data,hora,vagas)],[(data,hora,vagas)],[(data,hora,vagas)]]
+	dados_form = formata_dados(dados)
+
+	#vagasPorEstado(dados_form)
+	vagasPorPeriodo(dados_form)
