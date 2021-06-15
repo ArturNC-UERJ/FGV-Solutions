@@ -1,5 +1,7 @@
 import datetime as dt
+from tkinter import *
 
+#FUNÇÕES DE FORMATAÇÃO DO ARQUIVO
 def extrai_dados():
 	arquivo = open('03-03---04--09.txt', encoding='utf-8')
 
@@ -51,15 +53,44 @@ def verificaBarraN(texto):
 		return True
 
 #FUNÇÕES DE OPERAÇÃO PRINCIPAIS
-def vagasPorMes(mes, dados): #REFAZER COM DATETIME
-	vagas = 0
+def detalhesCT(dados):
 
-	for i in dados:
-		for x in i:
-			if x[0][3:5] == mes:
-				vagas += int(x[2])
+	print("Digite o nome do Centro de Testes: ")
+	print("Dica: é possível digitar apenas partes do nome (Escreva igual ao certpessoas)")
+	nomeCT = input()
+	nomesCTS = []
+	datasCTS = []
 
-	return vagas
+	for i in range(len(dados[0])):
+		if nomeCT in dados[0][i]:
+			nomesCTS.append(dados[0][i])
+			datasCTS.append(dados[1][i])
+
+	vagasPorPeriodo([nomesCTS,datasCTS])
+
+	return
+
+def vagasPorMes(dados):
+
+	mes = int(input("Digite o mes: "))
+
+	for i in range(len(dados[1])):
+		print('-' * (len(dados[0][i]) + 4))
+		print(f'| {dados[0][i]} |')
+		print('-' * (len(dados[0][i]) + 4))
+		print(f'|    DATA    | HORA  |VAGAS |')
+		totVagas = 0
+		for j in range(len(dados[1][i])):
+			if dados[1][i][j][0].month == mes:
+				totVagas += int(dados[1][i][j][1])
+				print(
+					f'| {dados[1][i][j][0]:%d}/{dados[1][i][j][0]:%m}/{dados[1][i][j][0]:%Y} | {dados[1][i][j][0]:%H}:{dados[1][i][j][0]:%M} |  {dados[1][i][j][1]:3} |')
+		print('-' * (len('Total de vagas no período:    ') + 4))
+		print(f'| Total de vagas no período: {totVagas} |')
+		print('-' * (len('Total de vagas no período:    ') + 4))
+		print()
+
+	return
 
 def vagasPorEstado(dados):
 	UFs = ['AC','AL','AP','AM','BA','CE','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO','DF']
@@ -88,7 +119,7 @@ def vagasPorPeriodo(dados):
 	anoF = int(input("Digite o ano final do intervalo: "))
 
 	inicio = dt.datetime(anoI, mesI, diaI)
-	final = dt.datetime(anoF, mesF, diaF)
+	final = dt.datetime(anoF, mesF, diaF+1) #+1 pq tava dando erro foda-se
 
 	for i in range(len(dados[1])):
 		print('-'*(len(dados[0][i]) + 4))
@@ -119,8 +150,10 @@ if __name__ == '__main__':
 	dados = list(filter(verificaBarraN, dados))
 
 	# dados[0] = lista de nomes de cts
-	# dados[1] = lista de listas de triplas | ex: [[(data,hora,vagas)],[(data,hora,vagas)],[(data,hora,vagas)]]
+	# dados[1] = lista de listas de tuplas | ex: [[(datetime,vagas)],[(datetime,vagas)],[(datetime,vagas)]]
 	dados_form = formata_dados(dados)
 
 	#vagasPorEstado(dados_form)
-	vagasPorPeriodo(dados_form)
+	#vagasPorPeriodo(dados_form)
+	#vagasPorMes(dados_form)
+	#detalhesCT(dados_form)
