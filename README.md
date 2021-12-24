@@ -1,4 +1,4 @@
-# FGV-Solutions
-Repository destinated to some process automation with Python in my present Job.
+# Projeto Automação FGV
+Respositório destinado ao projeto realizado utilizando Python para analisar vagas para realização de provas de certificação
 
-Files are divided by problem and each problem has an README for some contextualization.
+Com ele é possível identificar diversas regiões do país e suas respectivas vagas
